@@ -10,8 +10,9 @@ public interface MemberService {
 
 	int usermodify(MemberVO mvo);
 
-	boolean checkid(MemberVO mvo);
 
 	int deleteMember(int mem_num);
+
+	String pwCheck(String mem_pw);
 
 }

@@ -1,5 +1,7 @@
 package com.ezen.book.service;
 
+import java.util.regex.Pattern;
+
 import javax.inject.Inject;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -56,20 +58,7 @@ public class MemberServiceImpl implements MemberService {
 
 	}
 	
-	@Override
-	public boolean checkid(MemberVO mvo) {
-		
-		MemberVO tmpId=mdao.checkId(mvo.getMem_id());
-		
-		if(tmpId != null) {
-			return false;
-			
-		}else {
-			return true;
-			
-		}
-		
-	}
+
 
 
 
@@ -101,6 +90,28 @@ public class MemberServiceImpl implements MemberService {
 		log.info(">>> member de;ete check msvI");
 		return mdao.memberDelete(mem_num);
 	}
+
+
+
+
+
+	@Override
+	   public String pwCheck(String mem_pw) {
+	      // 비밀번호 유효성 검사 : 비밀번호가 입력되었는지 체크
+	      // 정규식 (영문(대소문자 구분), 숫자, 특수문자 조합, 9~12자리)
+	      String pwPattern = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-z])(?=.*[A-Z]).{9,12}$";
+	      String pwCheck = mem_pw;
+	      // null값일 경우
+	      if (pwCheck == null || pwCheck.length() == 0) {
+	         return "pw_null";
+	      }
+	      // 비밀번호와 정규표현식 비교
+	      java.util.regex.Matcher matcher = Pattern.compile(pwPattern).matcher(pwCheck);
+	      if (!matcher.matches()) { // 정규식에 어긋난다면 재작성 요청하기
+	         return "pw_rewrite";
+	      }
+	      return "pw_ok";
+	   }
 
 
 

@@ -1,18 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-    
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="/resources/css/main.css">
 </head>
 <body>
-${ses.mem_id}
-
-<a href="/board/register"><button>1대1문의 작성하기</button></a>
-	<table border="1">
+<jsp:include page="../layout/header.jsp"></jsp:include>
+<div class="main">
+	<table class="table table-striped">
 			<tr>
 				<th>글번호</th>
 				<th>제목</th>
@@ -23,7 +24,7 @@ ${ses.mem_id}
 			</tr>
 						<c:forEach items="${list}" var="board">
 				<c:choose>
-					    <c:when test="${ses.mem_auth == '0'|| ses.mem_id == board.brd_writer}"> <!--관리자권한 정하기 -->
+					    <c:when test="${ses.mem_auth == '0'|| ses.mem_id == board.brd_writer}">
 							<tr>
 					   		<td>${board.brd_num}</td>			
 							<td><a href="/board/detail?brd_num=${board.brd_num}">${board.brd_title}</a></td>				
@@ -67,13 +68,13 @@ ${ses.mem_id}
 					
 			<div>
 			<c:if test="${pgh.prev}">
-			<a href="/brd/list?pageNo=${pgh.startPage-1}&qty=${pgh.pgvo.qty}&type=${pgh.pgvo.type}&keyword=${pgh.pgvo.keyword}">prev</a>
+			<a href="/board/list?pageNo=${pgh.startPage-1}&qty=${pgh.pgvo.qty}&type=${pgh.pgvo.type}&keyword=${pgh.pgvo.keyword}">prev</a>
 			</c:if>
 			<c:forEach begin="${pgh.startPage }" end="${pgh.endPage }" var="i">
-				<a href="/brd/list?pageNo=${i}&qty=${pgh.pgvo.qty}&type=${pgh.pgvo.type}&keyword=${pgh.pgvo.keyword}">${i} ｜ </a>
+				<a href="/board/list?pageNo=${i}&qty=${pgh.pgvo.qty}&type=${pgh.pgvo.type}&keyword=${pgh.pgvo.keyword}">${i} ｜ </a>
 			</c:forEach>
 			<c:if test="${pgh.next}">
-			<a href="/brd/list?pageNo=${pgh.endPage+1}&qty=${pgh.pgvo.qty}&type=${pgh.pgvo.type}&keyword=${pgh.pgvo.keyword}">next</a>
+			<a href="/board/list?pageNo=${pgh.endPage+1}&qty=${pgh.pgvo.qty}&type=${pgh.pgvo.type}&keyword=${pgh.pgvo.keyword}">next</a>
 			</c:if>
 			</div>
 	</table>
@@ -102,5 +103,8 @@ ${ses.mem_id}
 		</div>
 	</form>
 	</div>
+<a href="/board/register"><button class="btn btn-secondary">1대1문의 작성하기</button></a>
+</div>
+<jsp:include page="../layout/footer.jsp"></jsp:include>
 </body>
 </html>

@@ -46,7 +46,13 @@
 		values (#{brd_title},#{brd_writer},#{brd_content},#{brd_category},#{brd_mem_num})
 	</insert>
 
+	<update id="countup">
+		update board set brd_views=brd_views+1 where brd_num=#{brd_num}
+	</update>
 	
+	<update id="countdown">
+		update board set brd_views=brd_views-1 where brd_num=#{brd_num}
+	</update>
 	
 		<sql id="search">
 		<if test="type != null">

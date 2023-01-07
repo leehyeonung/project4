@@ -32,8 +32,14 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public List<CommentVO> getList(int bno) {
+	public List<CommentVO> getList(int cot_brd_num) {
 		// TODO Auto-generated method stub
-		return cdao.selectList(bno);
+		return cdao.selectList(cot_brd_num);
+	}
+
+	@Override
+	public int delete(int cot_num) {
+		// TODO Auto-generated method stub
+		return cdao.commentDelete(cot_num);
 	}
 }

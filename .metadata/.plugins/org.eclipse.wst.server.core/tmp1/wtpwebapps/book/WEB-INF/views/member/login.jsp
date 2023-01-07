@@ -67,7 +67,7 @@ hr{
 	<div class="login-container">
 	
 		<div class="logo">
-			<a href="/"><img src="../resources/logo.jpg" alt="로고"></a><br>
+			<a href="/"><img src="/resources/image/logo.jpg" alt="로고"></a><br>
 		</div>
 		<div class="login">
 			<form action="/mem/login" method="post">
@@ -103,7 +103,7 @@ hr{
 		    session.setAttribute("state", state);
  			%>
 
-			<a href="<%=apiURL%>"><img height="50" src="../resources/btnG_icon_circle.png"></a>
+			<a href="<%=apiURL%>"><img height="50" src="/resources/image/btnG_icon_circle.png"></a>
 			<!-- <button>카카오</button>
 			<button>구글</button> -->
 		</div>

@@ -1,30 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="/resources/css/main.css">
 </head>
 <body>
+<jsp:include page="../layout/header.jsp"></jsp:include>
+<div class="main">
 ${ses.mem_id}님 구매내역화면입니다.
-
-<table border="1">
+<table class="table table-striped">
 			<tr>
 				<th>주문번호</th>
 				<th>주문자</th>
 				<th>주문상태</th>
-				<th>#</th>
-				<th>#</th>
+				<th>주문일</th>
+				<th>수령인</th>
 			</tr>
 			<c:forEach items="${list}" var="order">
 				<tr>
 					<td>${order.order_num}</td>				
 					<td>${ses.mem_id}</td>				
 					<td>${order.order_sta}</td>				
-					<td>#</td>
-					<td>#</td>
+					<td>${order.order_date}</td>
+					<td>${order.order_recepient}</td>
 				</tr>
 			</c:forEach>
 			<div>
@@ -39,9 +42,7 @@ ${ses.mem_id}님 구매내역화면입니다.
 			</c:if>
 			</div>
 	</table>
-	
-	
-
-
+</div>
+<jsp:include page="../layout/footer.jsp"></jsp:include>
 </body>
 </html>

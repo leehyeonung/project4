@@ -1,17 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="/resources/css/main.css">
 </head>
-<body>
-detail 페이지입니다.
-아이디 : ${ses.mem_id}
-게시판제목 : ${board.brd_title}
-
-<table border="1">
+<body onsubmit=getCommentList(${board.brd_num})>
+<jsp:include page="../layout/header.jsp"></jsp:include>
+<div class="main">
+<table class="table table-striped">
 	<tr>
 		<th>번호</th>
 		<td>${board.brd_num}</td>
@@ -42,10 +43,9 @@ detail 페이지입니다.
 <a href="/board/remove?brd_num=${board.brd_num}">삭제</a><br>
 <a href="/board/list">1대1문의 리스트</a><br>
 
-<c:if test="${ses.mem_auth eq 0}">
 <div class="container">
 		<div class="input-group my-3">
-			<span class="input-group-text" id="cmtWriter">${ses.mem_id }</span>
+			<span class="input-group-text" id="cmtWriter">${ses.mem_id}</span>
 			<input type="text" class="form-control" id="cmtText" placeholder="Test Add Comment ">
 			<button class="btn btn-success" id="cmtPostBtn" type="button">Post</button>
 		</div>
@@ -62,14 +62,15 @@ detail 페이지입니다.
 	
 	<script type="text/javascript">
 	const bnoVal = '<c:out value="${board.brd_num}" />';
+	const id='<c:out value="${ses.mem_id}"/>'
+	console.log(id);
 	console.log(bnoVal);
 	</script>
 	<script type="text/javascript" src="/resources/js/boardComment.js"></script>
 	<script type="text/javascript">
-	getCommentList(bnoVal);
+	getCommentList(bnoVal, id);
 	</script>
-</c:if>
-
-
+</div>
+<jsp:include page="../layout/footer.jsp"></jsp:include>
 </body>
 </html>

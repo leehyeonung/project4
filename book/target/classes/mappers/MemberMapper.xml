@@ -6,9 +6,7 @@
 		select * from member where mem_id=#{mem_id}
 	</select>
 	
-	<select id="checkId" resultType="com.ezen.book.domain.MemberVO">
-		select * from member where mem_id=#{mem_id}
-	</select>
+
 	
 	<insert id="insertMember">
 		insert into member (mem_id,mem_pw,mem_name,mem_ad,mem_age,mem_gender,

@@ -10,6 +10,8 @@ public interface CommentService {
 
 	int modify(CommentVO cvo);
 
-	List<CommentVO> getList(int bno);
+	List<CommentVO> getList(int cot_brd_num);
+
+	int delete(int cot_num);
 
 }

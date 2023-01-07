@@ -18,6 +18,7 @@ import com.ezen.book.domain.MemberVO;
 import com.ezen.book.domain.PagingVO;
 import com.ezen.book.handler.PagingHandler;
 import com.ezen.book.repository.BoardDAO;
+import com.ezen.book.repository.CommentDAO;
 import com.ezen.book.repository.MemberDAO;
 import com.ezen.book.service.BoardService;
 import com.ezen.book.service.MemberServiceImpl;
@@ -38,6 +39,9 @@ public class BoardController {
 	@Inject
 	private BoardDAO bdao;
 	
+	@Inject
+	private CommentDAO cdao;
+	
 	@GetMapping("/list")
 	public String list(Model model,PagingVO pvo){
 		log.info(">>>pageNo :"+pvo.getPageNo());
@@ -52,6 +56,7 @@ public class BoardController {
 	@GetMapping({"/detail","/modify"})
 	public void detailList(Model model, @RequestParam("brd_num")int brd_num) {
 		BoardVO board=bsv.getDetail(brd_num);
+		bdao.countup(brd_num);
 		model.addAttribute("board", board);
 	}
 	
@@ -62,6 +67,7 @@ public class BoardController {
 		int isUp=bsv.modify(bvo,member);
 		log.info(">>>modify:"+(isUp>0?"ok":"fail"));
 		reAttr.addFlashAttribute(isUp>0?"1":"0");
+		bdao.countdown(bvo.getBrd_num());
 		return "redirect:/board/list";
 	}
 	
@@ -69,6 +75,7 @@ public class BoardController {
 	@GetMapping("/remove")
 	public String remove(@RequestParam("brd_num") int brd_num) {
 		bdao.removerBoard(brd_num);
+		cdao.removeComment(brd_num);
 		return "redirect:/board/list";
 	}
 	

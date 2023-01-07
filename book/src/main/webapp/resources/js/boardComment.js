@@ -1,28 +1,3 @@
-
-document.getElementById('cmtPostBtn').addEventListener('click',()=>{
-    const cmtText=document.getElementById('cmtText');
-    console.log(cmtText.value);
-    if(cmtText.value==null||cmtText.value==''){
-        alert("댓글을 입력해주세요.");
-        cmtText.focus();
-        return false;
-    }else{
-        let cmtData={
-            bno : bnoVal,
-            writer : document.getElementById('cmtWriter').innerText,
-            content : cmtText.value
-        };
-        console.log(cmtData);
-        postCommentServer(cmtData).then(result=>{
-            if(result>0){
-                alert('댓글 등록 성공~!!');
-            }
-            //화면에 출력
-            getCommentList(cmtData.bno);
-        });
-    }
-});
-
 async function postCommentServer(cmtData){
     try {
         const url='/comment/post';
@@ -41,10 +16,36 @@ async function postCommentServer(cmtData){
     }
 }
 
-async function spreadCommentFromServer(bno){
-    console.log(bno);
+document.getElementById('cmtPostBtn').addEventListener('click',()=>{
+    const cmtText=document.getElementById('cmtText').value;
+    console.log(cmtText);
+    if(cmtText==null||cmtText==''){
+        alert("댓글을 입력해주세요.");
+        document.getElementById('cmtText').focus(); //커서를 cmtText창으로 
+        return false;
+    }else{
+        let cmtData={
+            cot_brd_num : bnoVal,
+            cot_writer : document.getElementById('cmtWriter').innerText,
+            cot_content : cmtText
+        };
+  
+        
+        console.log(cmtData);
+       postCommentServer(cmtData).then(result=>{
+            if(result>0){
+                alert('댓글 등록 성공~!!');
+            }
+            //화면에 출력
+            getCommentList(cmtData.cot_brd_num);
+        });
+    }
+});
+
+async function spreadCommentFromServer(cot_brd_num){
+    console.log(cot_brd_num);
     try {
-        const resp=await fetch('/comment/'+bno);
+        const resp=await fetch('/comment/'+cot_brd_num);
         const result=await resp.json();
         return result;
     } catch (error) {
@@ -52,19 +53,22 @@ async function spreadCommentFromServer(bno){
     }
 }
 
-function getCommentList(bno){
-    spreadCommentFromServer(bno).then(result=>{
+function getCommentList(cot_brd_num){
+    spreadCommentFromServer(cot_brd_num).then(result=>{
+
     console.log(result);
     const ul=document.getElementById('cmtListArea');
     if(result.length>0){
         ul.innerHTML="";
         for(let cvo of result){
-            let li=`<li data-cno="${cvo.cno}" class="list-group-item d-flex justify-content-between align-items-start">`;
-                li+=`<div class="ms-2 me-auto"><div class="fw-bold">${cvo.writer}</div>`;
-                li+=`<input type="text" class="form-control" id="cmtTextMod" value="${cvo.content}"></div>`;
-                li+=`<span class="badge bg-dark rounded-pill">${cvo.mod_at}</span>`;
-                li+=`<button class="btn btn-success mod" id="cmtPostBtn" type="button">%</button>`;
-                li+=`<button class="btn btn-success del" id="cmtPostBtn" type="button">x</button>`;
+            let li=`<li data-cot_num="${cvo.cot_num}" class="list-group-item d-flex justify-content-between align-items-start">`;
+                li+=`<div class="ms-2 me-auto"><div class="fw-bold">${cvo.cot_writer}</div>`;
+                li+=`<input type="text" class="form-control" id="cmtTextMod" value="${cvo.cot_content}"></div>`;
+                li+=`<span class="badge bg-dark rounded-pill">${cvo.cot_regdate}</span>`;
+                li+= `<button class="btn btn-sm btn-outline-warning mod" type="button">%</button>`;
+                li+= `<button class="btn btn-sm btn-outline-danger del" type="button">X</button>`;
+              
+      
                 li+=`</li>`;
                 ul.innerHTML+=li;
             }
@@ -77,7 +81,7 @@ function getCommentList(bno){
 
 async function editCommentToServer(cmtTextMod){
     try {
-        const url='/comment/'+cmtTextMod.cno;
+        const url='/comment/'+cmtTextMod.cot_num;
         const config={
             method : 'put',
             headers : {
@@ -93,42 +97,15 @@ async function editCommentToServer(cmtTextMod){
     }
 }
 
-async function removeCommentAtServer(cno){
-    try {
-        const url='/comment/'+cno;
-        const config={
-            method : 'delete'
-        };
-        const resp=await fetch(url,config);
-        const result=await resp.text();
-        return result;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-async function removeCommentToServer(cmtDatadel){
-	try{
-		const url='/comment/'+cmtDatadel.cno;
-		const config={
-			method : 'delete'
-		};
-			const resp = await fetch(url,config);
-			const result = await resp.text();
-			return result;
-	}catch(error){
-		console.log(error);
-	}
-}
 document.addEventListener('click',(e)=>{
     if(e.target.classList.contains('mod')){
         let li=e.target.closest('li');
-        let cnoVal=li.dataset.cno;
+        let cnoVal=li.dataset.cot_num;
         let textContent=li.querySelector('#cmtTextMod').value;
 
         let cmtDataMod={
-            cno : cnoVal,
-            content : textContent
+            cot_num : cnoVal,
+            cot_content : textContent
         };
         console.log(cmtDataMod);
         editCommentToServer(cmtDataMod).then(result=>{
@@ -140,18 +117,38 @@ document.addEventListener('click',(e)=>{
     }else if(e.target.classList.contains('del')){
         //삭제 값 처리
         let li=e.target.closest('li');
-        let cnoVal=li.dataset.cno;
-        console.log(cnoVal);
+        let cnoVal=li.dataset.cot_num;
         
-        let cmtDatadel ={
-        cno:cnoVal
-   		}
-   		
-   		removeCommentToServer(cmtDatadel).then(result=>{
-   		if(result>0){
-   			alert('댓글 삭제 성공');
-   			}
-   			getCommentList(bnoVal);
-   			})
-   			}
-})
+        
+        deleteCommentToServer(cnoVal).then(result =>{
+                if(result>0){
+
+                    alert("댓글 삭제 성공");
+                }
+                getCommentList(bnoVal);
+            })
+    }
+}
+)
+
+async function deleteCommentToServer(cnoVal){
+    try {
+        const url = '/comment/'+cnoVal;
+        const config = {
+            method : 'delete',
+            headers : { 
+                'content-type' : 'application/json; charset=UTF-8'
+            },
+            body : JSON.stringify(cnoVal)
+        };
+        const resp = await fetch(url, config);
+        const result = await resp.text();
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+

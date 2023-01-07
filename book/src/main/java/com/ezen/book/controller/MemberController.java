@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ezen.book.domain.MemberVO;
@@ -96,15 +97,14 @@ public class MemberController {
 	}
 	
 	@PostMapping("/modify")
-	public  String modifyPost(MemberVO mvo) {		
-		log.info("mvo>>>"+mvo.toString());
-		boolean idOk=msv.checkid(mvo);
-		if (!idOk) {
-			return "/member/mypage";
-		}
-		
+	public  String modifyPost(MemberVO mvo,HttpServletRequest req) {		
+		log.info("mvo>>>"+mvo.toString());		
 		int isUp=msv.usermodify(mvo);
 		log.info(">>>modify:"+(isUp>0?"ok":"fail"));
+		req.getSession().removeAttribute("ses");
+		req.getSession().invalidate();
+
+		
 		return "redirect:/";
 	}
 	
@@ -163,7 +163,18 @@ public class MemberController {
 		req.getSession().removeAttribute("ses");
 		req.getSession().invalidate();
 		return "/home";
+		
 	}
+	
+	@PostMapping("pwCheck")//회원가입시 pw가 null,정규화부합 확인 메서드
+	   @ResponseBody  
+	   public String pwCheck(MemberVO mvo) {
+	      String isOk = msv.pwCheck(mvo.getMem_pw());
+	      log.info(mvo.getMem_pw());
+	      log.info("비번 체크 isok : "+isOk);
+	      return isOk;
+	   }
+	
 	
 	
 }
